@@ -1,23 +1,5 @@
 import streamlit as st
 import pickle
+model = pickle.load(open("model.pkl","rb"))
+tfidf = pickle.load(open("tfidf.pkl","rb"))
 
-with open("model.pkl", "rb") as f:
- model = pickle.load(f)
-
-with open("tfidf.pkl", "rb") as f:
- tfidf = pickle.load(f)
-
-st.title("Fake Job Detector")
-job_text = st.text_area("Job Description", height=200)
-
-if st.button("Analyze"):
- if job_text.strip() == "":
- st.warning("Please enter a job description!")
- else:
- vec = tfidf.transform([job_text])
- pred = model.predict(vec)[0]
- prob = model.predict_proba(vec)[0]
- if pred == 1:
- st.error("FAKE job detected!")
- else:
- st.success("REAL job!")
